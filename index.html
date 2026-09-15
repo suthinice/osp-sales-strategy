@@ -214,18 +214,21 @@
 
   // ยิง fetch พร้อม retry อัตโนมัติถ้า Apps Script ตอบกลับเป็น HTML แทน JSON
   // (เกิดจาก cold start ของ Apps Script บางครั้ง ไม่ใช่ error จริง)
-  async function fetchJson(url, options, retries) {
-    if (retries === undefined) retries = 1;
+  async function fetchJson(url, options, attempt) {
+    if (attempt === undefined) attempt = 0;
+    const delays = [0, 1000, 2500]; // รอมากขึ้นเรื่อยๆ ในแต่ละรอบที่ลองใหม่ (รวม 3 ครั้ง)
+    if (delays[attempt] > 0) {
+      await new Promise(function (r) { setTimeout(r, delays[attempt]); });
+    }
     const res = await fetch(url, options);
     const text = await res.text();
     try {
       return JSON.parse(text);
     } catch (err) {
-      if (retries > 0) {
-        await new Promise(function (r) { setTimeout(r, 800); });
-        return fetchJson(url, options, retries - 1);
+      if (attempt < delays.length - 1) {
+        return fetchJson(url, options, attempt + 1);
       }
-      throw new Error('เซิร์ฟเวอร์ตอบกลับไม่ถูกต้อง ลองใหม่อีกครั้ง');
+      throw new Error('เซิร์ฟเวอร์ Apps Script ตอบสนองช้าผิดปกติ กรุณาลองบันทึกอีกครั้ง');
     }
   }
 
