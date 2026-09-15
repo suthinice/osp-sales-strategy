@@ -68,6 +68,20 @@
     outline: none;
   }
   input:focus { border-bottom-color: var(--accent); }
+  select {
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    padding: 8px 2px;
+    margin-bottom: 20px;
+    outline: none;
+    cursor: pointer;
+  }
+  select:focus { border-bottom-color: var(--accent); }
   button {
     width: 100%;
     font-family: inherit;
@@ -137,8 +151,17 @@
 
     <div class="row">
       <div>
-        <label for="department">แผนก</label>
-        <input id="department" type="text">
+        <label for="department">หน่วยงาน</label>
+        <select id="department" required>
+          <option value="" disabled selected>เลือกหน่วยงาน</option>
+          <option value="Sales LMT">Sales LMT</option>
+          <option value="PC">PC</option>
+          <option value="นางฟ้าชงชิม">นางฟ้าชงชิม</option>
+          <option value="ทีมกิจกรรม">ทีมกิจกรรม</option>
+          <option value="Van">Van</option>
+          <option value="ทวีกิจ">ทวีกิจ</option>
+          <option value="อื่นๆ">อื่นๆ</option>
+        </select>
       </div>
       <div>
         <label for="phone">เบอร์โทร</label>
