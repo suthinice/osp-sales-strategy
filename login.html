@@ -4,13 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>เข้าสู่ระบบ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #2b2825;
-    --paper: #faf7f2;
-    --line: #d8d2c6;
-    --accent: #5b6f5b;
-    --accent-dark: #46583f;
+    --bg: #eef1f7;
+    --surface: #ffffff;
+    --ink: #14182b;
+    --muted: #6b7280;
+    --border: #e3e7f0;
+    --accent: #2451b8;
+    --accent-dark: #1b3e94;
+    --accent-soft: #eaf0ff;
+    --danger: #dc2626;
+    --success: #16a34a;
   }
   * { box-sizing: border-box; }
   body {
@@ -19,103 +27,146 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--paper);
+    background: var(--bg);
     color: var(--ink);
-    font-family: "Georgia", "Noto Serif Thai", serif;
-    line-height: 1.6;
-    padding: 20px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    padding: 24px;
   }
+  .shell { width: 100%; max-width: 400px; }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .brand-mark {
+    width: 38px; height: 38px;
+    border-radius: 11px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .brand-mark svg { width: 20px; height: 20px; }
+  .brand-name { font-weight: 700; font-size: 16px; letter-spacing: -0.01em; }
+
   .card {
-    width: 100%;
-    max-width: 380px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px 32px;
+    box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 8px 24px rgba(16,24,40,0.04);
   }
   h1 {
-    font-size: 26px;
-    font-weight: 400;
-    margin: 0 0 4px;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
   }
   p.sub {
-    margin: 0 0 32px;
-    color: #6b6459;
-    font-size: 14px;
-  }
-  form {
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding: 24px 0;
+    margin: 0 0 28px;
+    color: var(--muted);
+    font-size: 14.5px;
   }
   label {
     display: block;
-    font-size: 13px;
-    color: #6b6459;
-    margin-bottom: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 7px;
   }
+  .field { margin-bottom: 18px; }
   input {
     width: 100%;
     font-family: inherit;
-    font-size: 16px;
+    font-size: 15px;
     color: var(--ink);
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--line);
-    padding: 8px 2px;
-    margin-bottom: 22px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 11px;
+    padding: 12px 14px;
     outline: none;
+    transition: border-color .15s, box-shadow .15s, background .15s;
   }
-  input:focus { border-bottom-color: var(--accent); }
+  input:focus {
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
   button {
     width: 100%;
     font-family: inherit;
     font-size: 15px;
-    color: var(--paper);
+    font-weight: 700;
+    color: #fff;
     background: var(--accent);
     border: none;
-    padding: 12px 26px;
+    padding: 13px 26px;
+    border-radius: 11px;
     cursor: pointer;
-    border-radius: 2px;
+    margin-top: 6px;
+    transition: background .15s, transform .1s;
   }
   button:hover { background: var(--accent-dark); }
-  button:disabled { opacity: 0.5; cursor: default; }
+  button:active { transform: scale(0.99); }
+  button:disabled { opacity: 0.55; cursor: default; }
+
   #status {
-    font-size: 14px;
-    margin-top: 16px;
-    min-height: 20px;
+    font-size: 13.5px;
+    margin-top: 14px;
+    min-height: 18px;
     text-align: center;
+    font-weight: 500;
   }
-  #status.error { color: #a44; }
+  #status.error { color: var(--danger); }
+
   .back {
     display: block;
     text-align: center;
-    margin-top: 20px;
+    margin-top: 22px;
     font-size: 14px;
-    color: var(--accent-dark);
+    color: var(--accent);
     text-decoration: none;
-    border-bottom: 1px solid transparent;
+    font-weight: 600;
   }
-  .back:hover { border-bottom-color: var(--accent-dark); }
+  .back:hover { color: var(--accent-dark); }
 </style>
 </head>
 <body>
-<div class="card">
-  <h1>เข้าสู่ระบบ</h1>
-  <p class="sub">กรอก ID และรหัสผ่านเพื่อเข้าใช้งาน</p>
+<div class="shell">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 5.5C4 4.67 4.67 4 5.5 4h9L20 8.5V18.5c0 .83-.67 1.5-1.5 1.5h-13C4.67 20 4 19.33 4 18.5v-13Z" stroke="white" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M8 10.5h8M8 14h5" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="brand-name">สมุดข้อความ</span>
+  </div>
 
-  <form id="loginForm">
-    <label for="id">ID</label>
-    <input id="id" type="text" required autocomplete="username">
+  <div class="card">
+    <h1>เข้าสู่ระบบ</h1>
+    <p class="sub">กรอก ID และรหัสผ่านเพื่อเข้าใช้งาน</p>
 
-    <label for="password">Password</label>
-    <input id="password" type="password" required autocomplete="current-password">
+    <form id="loginForm">
+      <div class="field">
+        <label for="id">ID</label>
+        <input id="id" type="text" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" required autocomplete="current-password">
+      </div>
 
-    <button type="submit" id="submitBtn">เข้าสู่ระบบ</button>
-    <div id="status"></div>
-  </form>
+      <button type="submit" id="submitBtn">เข้าสู่ระบบ</button>
+      <div id="status"></div>
+    </form>
 
-  <a class="back" href="register.html">ยังไม่มีบัญชี? สมัครสมาชิก</a>
+    <a class="back" href="register.html">ยังไม่มีบัญชี? สมัครสมาชิก</a>
+  </div>
 </div>
 
 <script>
-  // ใช้ URL เดียวกับหน้าโน้ต (Web app URL จาก Apps Script)
   const API_URL = 'https://script.google.com/macros/s/AKfycbxzdtvXpqqS1hNOXh6a5m2JxLi3B6t3bWoa64dz1uOFeNZCllyj8nkC8oChzduIbSrpRA/exec';
 
   const form = document.getElementById('loginForm');
@@ -141,7 +192,6 @@
       const json = await res.json();
       if (!json.success) throw new Error(json.error || 'เข้าสู่ระบบไม่สำเร็จ');
 
-      // เก็บข้อมูลผู้ใช้ไว้ใน session (หายเมื่อปิดแท็บ)
       sessionStorage.setItem('user', JSON.stringify(json.user));
       window.location.href = 'index.html';
     } catch (err) {
