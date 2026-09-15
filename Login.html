@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เข้าสู่ระบบ</title>
+<style>
+  :root {
+    --ink: #2b2825;
+    --paper: #faf7f2;
+    --line: #d8d2c6;
+    --accent: #5b6f5b;
+    --accent-dark: #46583f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Georgia", "Noto Serif Thai", serif;
+    line-height: 1.6;
+    padding: 20px;
+  }
+  .card {
+    width: 100%;
+    max-width: 380px;
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 400;
+    margin: 0 0 4px;
+  }
+  p.sub {
+    margin: 0 0 32px;
+    color: #6b6459;
+    font-size: 14px;
+  }
+  form {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 24px 0;
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    color: #6b6459;
+    margin-bottom: 6px;
+  }
+  input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    padding: 8px 2px;
+    margin-bottom: 22px;
+    outline: none;
+  }
+  input:focus { border-bottom-color: var(--accent); }
+  button {
+    width: 100%;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--paper);
+    background: var(--accent);
+    border: none;
+    padding: 12px 26px;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  button:hover { background: var(--accent-dark); }
+  button:disabled { opacity: 0.5; cursor: default; }
+  #status {
+    font-size: 14px;
+    margin-top: 16px;
+    min-height: 20px;
+    text-align: center;
+  }
+  #status.error { color: #a44; }
+  .back {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--accent-dark);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .back:hover { border-bottom-color: var(--accent-dark); }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>เข้าสู่ระบบ</h1>
+  <p class="sub">กรอก ID และรหัสผ่านเพื่อเข้าใช้งาน</p>
+
+  <form id="loginForm">
+    <label for="id">ID</label>
+    <input id="id" type="text" required autocomplete="username">
+
+    <label for="password">Password</label>
+    <input id="password" type="password" required autocomplete="current-password">
+
+    <button type="submit" id="submitBtn">เข้าสู่ระบบ</button>
+    <div id="status"></div>
+  </form>
+
+  <a class="back" href="register.html">ยังไม่มีบัญชี? สมัครสมาชิก</a>
+</div>
+
+<script>
+  // ใช้ URL เดียวกับหน้าโน้ต (Web app URL จาก Apps Script)
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxzdtvXpqqS1hNOXh6a5m2JxLi3B6t3bWoa64dz1uOFeNZCllyj8nkC8oChzduIbSrpRA/exec';
+
+  const form = document.getElementById('loginForm');
+  const statusEl = document.getElementById('status');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const id = document.getElementById('id').value.trim();
+    const password = document.getElementById('password').value;
+    if (!id || !password) return;
+
+    submitBtn.disabled = true;
+    statusEl.textContent = 'กำลังตรวจสอบ...';
+    statusEl.className = '';
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'login', id: id, password: password })
+      });
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || 'เข้าสู่ระบบไม่สำเร็จ');
+
+      // เก็บข้อมูลผู้ใช้ไว้ใน session (หายเมื่อปิดแท็บ)
+      sessionStorage.setItem('user', JSON.stringify(json.user));
+      window.location.href = 'index.html';
+    } catch (err) {
+      statusEl.textContent = err.message;
+      statusEl.className = 'error';
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
