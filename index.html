@@ -4,167 +4,274 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>สมุดข้อความ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #2b2825;
-    --paper: #faf7f2;
-    --line: #d8d2c6;
-    --accent: #5b6f5b;
-    --accent-dark: #46583f;
+    --bg: #eef1f7;
+    --surface: #ffffff;
+    --ink: #14182b;
+    --muted: #6b7280;
+    --border: #e3e7f0;
+    --accent: #2451b8;
+    --accent-dark: #1b3e94;
+    --accent-soft: #eaf0ff;
+    --danger: #dc2626;
+    --success: #16a34a;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--paper);
+    background: var(--bg);
     color: var(--ink);
-    font-family: "Georgia", "Noto Serif Thai", serif;
-    line-height: 1.6;
-    padding: 48px 20px 80px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    padding-bottom: 60px;
   }
-  main {
-    max-width: 560px;
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .header-inner {
+    max-width: 640px;
     margin: 0 auto;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-mark {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .brand-mark svg { width: 18px; height: 18px; }
+  .brand-name { font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
+
+  .user-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .user-name {
+    font-size: 13.5px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .logout-btn {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .15s;
+  }
+  .logout-btn:hover { background: #dde7ff; }
+
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 28px 20px 0;
+  }
+
   h1 {
-    font-size: 28px;
-    font-weight: 400;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
     margin: 0 0 4px;
-    letter-spacing: 0.2px;
   }
   p.sub {
-    margin: 0 0 40px;
-    color: #6b6459;
+    margin: 0 0 24px;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 1px 2px rgba(16,24,40,0.04);
+    margin-bottom: 28px;
+  }
+  .card-title {
     font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 18px;
   }
-  form {
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding: 28px 0;
-    margin-bottom: 40px;
-  }
+
   label {
     display: block;
-    font-size: 13px;
-    color: #6b6459;
-    margin-bottom: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 7px;
   }
+  .field { margin-bottom: 16px; }
   input, textarea {
     width: 100%;
     font-family: inherit;
-    font-size: 16px;
+    font-size: 15px;
     color: var(--ink);
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--line);
-    padding: 8px 2px;
-    margin-bottom: 22px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 11px;
+    padding: 11px 14px;
     outline: none;
-  }
-  input:focus, textarea:focus {
-    border-bottom-color: var(--accent);
-  }
-  textarea {
+    transition: border-color .15s, box-shadow .15s, background .15s;
     resize: vertical;
-    min-height: 70px;
   }
+  textarea { min-height: 84px; }
+  input:focus, textarea:focus {
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
   button {
     font-family: inherit;
-    font-size: 15px;
-    color: var(--paper);
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #fff;
     background: var(--accent);
     border: none;
-    padding: 11px 26px;
+    padding: 11px 22px;
+    border-radius: 10px;
     cursor: pointer;
-    border-radius: 2px;
+    transition: background .15s, transform .1s;
   }
   button:hover { background: var(--accent-dark); }
-  button:disabled { opacity: 0.5; cursor: default; }
+  button:active { transform: scale(0.99); }
+  button:disabled { opacity: 0.55; cursor: default; }
 
   #status {
-    font-size: 14px;
+    font-size: 13.5px;
     margin-top: 12px;
-    min-height: 20px;
+    min-height: 18px;
+    font-weight: 500;
   }
-  #status.error { color: #a44; }
-  #status.ok { color: var(--accent-dark); }
+  #status.error { color: var(--danger); }
+  #status.ok { color: var(--success); }
+
+  .list-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--muted);
+    margin: 0 0 12px;
+  }
 
   .entry {
-    padding: 18px 0;
-    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 14px;
   }
-  .entry:last-child { border-bottom: none; }
+  .avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .entry-body { min-width: 0; flex: 1; }
   .entry-meta {
-    font-size: 13px;
-    color: #8a8375;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
     margin-bottom: 4px;
   }
-  .entry-meta .name { color: var(--ink); font-weight: 600; }
+  .entry-meta .name { font-weight: 700; font-size: 14.5px; }
+  .entry-meta .time { font-size: 12.5px; color: var(--muted); }
   .entry-message {
-    font-size: 16px;
+    font-size: 14.5px;
+    line-height: 1.55;
     white-space: pre-wrap;
-  }
-  #empty {
-    color: #8a8375;
-    font-size: 15px;
-    font-style: italic;
+    word-break: break-word;
   }
 
-  .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
+  #empty {
+    color: var(--muted);
+    font-size: 14.5px;
+    text-align: center;
+    padding: 32px 0;
   }
-  .topbar span {
-    font-size: 14px;
-    color: #6b6459;
-  }
-  .topbar a {
-    font-size: 14px;
-    color: var(--accent-dark);
-    text-decoration: none;
-    border-bottom: 1px solid var(--line);
-  }
-  .topbar a:hover { border-bottom-color: var(--accent-dark); }
 </style>
 </head>
 <body>
-<main>
-  <div class="topbar">
-    <span id="userLabel"></span>
-    <a href="#" id="logoutLink">ออกจากระบบ</a>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 5.5C4 4.67 4.67 4 5.5 4h9L20 8.5V18.5c0 .83-.67 1.5-1.5 1.5h-13C4.67 20 4 19.33 4 18.5v-13Z" stroke="white" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M8 10.5h8M8 14h5" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="brand-name">สมุดข้อความ</span>
+    </div>
+    <div class="user-area">
+      <span class="user-name" id="userLabel"></span>
+      <a href="#" class="logout-btn" id="logoutLink">ออกจากระบบ</a>
+    </div>
   </div>
-  <h1>สมุดข้อความ</h1>
-  <p class="sub">ฝากข้อความไว้ที่นี่ ข้อมูลถูกเก็บใน Google Sheet</p>
+</header>
 
-  <form id="noteForm">
-    <label for="name">ชื่อ</label>
-    <input id="name" type="text" required maxlength="60">
+<main>
+  <h1>ฝากข้อความ</h1>
+  <p class="sub">ข้อความทั้งหมดถูกเก็บใน Google Sheet</p>
 
-    <label for="message">ข้อความ</label>
-    <textarea id="message" required maxlength="500"></textarea>
+  <div class="card">
+    <p class="card-title">เขียนข้อความใหม่</p>
+    <form id="noteForm">
+      <div class="field">
+        <label for="name">ชื่อ</label>
+        <input id="name" type="text" required maxlength="60">
+      </div>
+      <div class="field">
+        <label for="message">ข้อความ</label>
+        <textarea id="message" required maxlength="500"></textarea>
+      </div>
+      <button type="submit" id="submitBtn">บันทึก</button>
+      <div id="status"></div>
+    </form>
+  </div>
 
-    <button type="submit" id="submitBtn">บันทึก</button>
-    <div id="status"></div>
-  </form>
-
+  <p class="list-title">ข้อความล่าสุด</p>
   <div id="list">
     <p id="empty">กำลังโหลดข้อความ...</p>
   </div>
 </main>
 
 <script>
-  // แก้ URL นี้เป็น Web app URL ที่ได้จากการ Deploy Apps Script
   const API_URL = 'https://script.google.com/macros/s/AKfycbxzdtvXpqqS1hNOXh6a5m2JxLi3B6t3bWoa64dz1uOFeNZCllyj8nkC8oChzduIbSrpRA/exec';
 
-  // เช็คว่า login แล้วหรือยัง ถ้ายังให้เด้งไปหน้า login
   const userRaw = sessionStorage.getItem('user');
   if (!userRaw) {
     window.location.href = 'login.html';
   }
   const currentUser = JSON.parse(userRaw || '{}');
   document.getElementById('userLabel').textContent =
-    'สวัสดี ' + (currentUser.name || '') + ' ' + (currentUser.surname || '');
+    (currentUser.name || '') + ' ' + (currentUser.surname || '');
 
   document.getElementById('logoutLink').addEventListener('click', function (e) {
     e.preventDefault();
@@ -176,6 +283,17 @@
   const statusEl = document.getElementById('status');
   const submitBtn = document.getElementById('submitBtn');
   const listEl = document.getElementById('list');
+
+  const avatarColors = ['#2451b8', '#0f766e', '#b45309', '#6d28d9', '#be123c', '#15803d'];
+  function colorFor(name) {
+    let h = 0;
+    for (let i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
+    return avatarColors[Math.abs(h) % avatarColors.length];
+  }
+  function initials(name) {
+    const trimmed = (name || '').trim();
+    return trimmed ? trimmed.charAt(0).toUpperCase() : '?';
+  }
 
   function formatDate(iso) {
     const d = new Date(iso);
@@ -202,9 +320,12 @@
 
       listEl.innerHTML = json.data.map(function (item) {
         return '<div class="entry">' +
-          '<div class="entry-meta"><span class="name">' + escapeHtml(item.name) + '</span> · ' + formatDate(item.timestamp) + '</div>' +
-          '<div class="entry-message">' + escapeHtml(item.message) + '</div>' +
-          '</div>';
+          '<div class="avatar" style="background:' + colorFor(item.name) + '">' + escapeHtml(initials(item.name)) + '</div>' +
+          '<div class="entry-body">' +
+            '<div class="entry-meta"><span class="name">' + escapeHtml(item.name) + '</span><span class="time">' + formatDate(item.timestamp) + '</span></div>' +
+            '<div class="entry-message">' + escapeHtml(item.message) + '</div>' +
+          '</div>' +
+        '</div>';
       }).join('');
     } catch (err) {
       listEl.innerHTML = '<p id="empty">โหลดข้อความไม่สำเร็จ: ' + escapeHtml(err.message) + '</p>';
@@ -222,7 +343,6 @@
     statusEl.className = '';
 
     try {
-      // ใช้ text/plain เพื่อเลี่ยง CORS preflight ที่ Apps Script ไม่รองรับ
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
