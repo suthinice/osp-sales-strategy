@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>สมัครสมาชิก</title>
+<title>สมุดข้อความ</title>
 <style>
   :root {
     --ink: #2b2825;
@@ -15,47 +15,40 @@
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background: var(--paper);
     color: var(--ink);
     font-family: "Georgia", "Noto Serif Thai", serif;
     line-height: 1.6;
-    padding: 40px 20px;
+    padding: 48px 20px 80px;
   }
-  .card {
-    width: 100%;
-    max-width: 420px;
+  main {
+    max-width: 560px;
+    margin: 0 auto;
   }
   h1 {
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 400;
     margin: 0 0 4px;
+    letter-spacing: 0.2px;
   }
   p.sub {
-    margin: 0 0 28px;
+    margin: 0 0 40px;
     color: #6b6459;
-    font-size: 14px;
+    font-size: 15px;
   }
   form {
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-    padding: 24px 0;
+    padding: 28px 0;
+    margin-bottom: 40px;
   }
-  .row {
-    display: flex;
-    gap: 16px;
-  }
-  .row > div { flex: 1; }
   label {
     display: block;
     font-size: 13px;
     color: #6b6459;
     margin-bottom: 6px;
   }
-  input {
+  input, textarea {
     width: 100%;
     font-family: inherit;
     font-size: 16px;
@@ -64,173 +57,193 @@
     border: none;
     border-bottom: 1px solid var(--line);
     padding: 8px 2px;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
     outline: none;
   }
-  input:focus { border-bottom-color: var(--accent); }
-  select {
-    width: 100%;
-    font-family: inherit;
-    font-size: 16px;
-    color: var(--ink);
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--line);
-    padding: 8px 2px;
-    margin-bottom: 20px;
-    outline: none;
-    cursor: pointer;
+  input:focus, textarea:focus {
+    border-bottom-color: var(--accent);
   }
-  select:focus { border-bottom-color: var(--accent); }
+  textarea {
+    resize: vertical;
+    min-height: 70px;
+  }
   button {
-    width: 100%;
     font-family: inherit;
     font-size: 15px;
     color: var(--paper);
     background: var(--accent);
     border: none;
-    padding: 12px 26px;
+    padding: 11px 26px;
     cursor: pointer;
     border-radius: 2px;
   }
   button:hover { background: var(--accent-dark); }
   button:disabled { opacity: 0.5; cursor: default; }
+
   #status {
     font-size: 14px;
-    margin-top: 16px;
+    margin-top: 12px;
     min-height: 20px;
-    text-align: center;
   }
   #status.error { color: #a44; }
   #status.ok { color: var(--accent-dark); }
-  .back {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
+
+  .entry {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .entry:last-child { border-bottom: none; }
+  .entry-meta {
+    font-size: 13px;
+    color: #8a8375;
+    margin-bottom: 4px;
+  }
+  .entry-meta .name { color: var(--ink); font-weight: 600; }
+  .entry-message {
+    font-size: 16px;
+    white-space: pre-wrap;
+  }
+  #empty {
+    color: #8a8375;
+    font-size: 15px;
+    font-style: italic;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .topbar span {
+    font-size: 14px;
+    color: #6b6459;
+  }
+  .topbar a {
     font-size: 14px;
     color: var(--accent-dark);
     text-decoration: none;
-    border-bottom: 1px solid transparent;
+    border-bottom: 1px solid var(--line);
   }
-  .back:hover { border-bottom-color: var(--accent-dark); }
+  .topbar a:hover { border-bottom-color: var(--accent-dark); }
 </style>
 </head>
 <body>
-<div class="card">
-  <h1>สมัครสมาชิก</h1>
-  <p class="sub">กรอกข้อมูลเพื่อสร้างบัญชีใหม่</p>
+<main>
+  <div class="topbar">
+    <span id="userLabel"></span>
+    <a href="#" id="logoutLink">ออกจากระบบ</a>
+  </div>
+  <h1>สมุดข้อความ</h1>
+  <p class="sub">ฝากข้อความไว้ที่นี่ ข้อมูลถูกเก็บใน Google Sheet</p>
 
-  <form id="registerForm">
-    <label for="id">ID</label>
-    <input id="id" type="text" required autocomplete="username">
+  <form id="noteForm">
+    <label for="name">ชื่อ</label>
+    <input id="name" type="text" required maxlength="60">
 
-    <div class="row">
-      <div>
-        <label for="password">Password</label>
-        <input id="password" type="password" required autocomplete="new-password">
-      </div>
-      <div>
-        <label for="confirmPassword">ยืนยัน Password</label>
-        <input id="confirmPassword" type="password" required autocomplete="new-password">
-      </div>
-    </div>
+    <label for="message">ข้อความ</label>
+    <textarea id="message" required maxlength="500"></textarea>
 
-    <div class="row">
-      <div>
-        <label for="name">ชื่อ</label>
-        <input id="name" type="text" required>
-      </div>
-      <div>
-        <label for="surname">นามสกุล</label>
-        <input id="surname" type="text">
-      </div>
-    </div>
-
-    <label for="lastname">ชื่อเล่น</label>
-    <input id="lastname" type="text">
-
-    <div class="row">
-      <div>
-        <label for="department">หน่วยงาน</label>
-        <select id="department" required>
-          <option value="" disabled selected>เลือกหน่วยงาน</option>
-          <option value="Sales LMT">Sales LMT</option>
-          <option value="PC">PC</option>
-          <option value="นางฟ้าชงชิม">นางฟ้าชงชิม</option>
-          <option value="ทีมกิจกรรม">ทีมกิจกรรม</option>
-          <option value="Van">Van</option>
-          <option value="ทวีกิจ">ทวีกิจ</option>
-          <option value="อื่นๆ">อื่นๆ</option>
-        </select>
-      </div>
-      <div>
-        <label for="phone">เบอร์โทร</label>
-        <input id="phone" type="text">
-      </div>
-    </div>
-
-    <button type="submit" id="submitBtn">สมัครสมาชิก</button>
+    <button type="submit" id="submitBtn">บันทึก</button>
     <div id="status"></div>
   </form>
 
-  <a class="back" href="login.html">← กลับไปหน้าเข้าสู่ระบบ</a>
-</div>
+  <div id="list">
+    <p id="empty">กำลังโหลดข้อความ...</p>
+  </div>
+</main>
 
 <script>
-  // ใช้ URL เดียวกับหน้า login (Web app URL จาก Apps Script)
+  // แก้ URL นี้เป็น Web app URL ที่ได้จากการ Deploy Apps Script
   const API_URL = 'https://script.google.com/macros/s/AKfycbxzdtvXpqqS1hNOXh6a5m2JxLi3B6t3bWoa64dz1uOFeNZCllyj8nkC8oChzduIbSrpRA/exec';
 
-  const form = document.getElementById('registerForm');
+  // เช็คว่า login แล้วหรือยัง ถ้ายังให้เด้งไปหน้า login
+  const userRaw = sessionStorage.getItem('user');
+  if (!userRaw) {
+    window.location.href = 'login.html';
+  }
+  const currentUser = JSON.parse(userRaw || '{}');
+  document.getElementById('userLabel').textContent =
+    'สวัสดี ' + (currentUser.name || '') + ' ' + (currentUser.surname || '');
+
+  document.getElementById('logoutLink').addEventListener('click', function (e) {
+    e.preventDefault();
+    sessionStorage.removeItem('user');
+    window.location.href = 'login.html';
+  });
+
+  const form = document.getElementById('noteForm');
   const statusEl = document.getElementById('status');
   const submitBtn = document.getElementById('submitBtn');
+  const listEl = document.getElementById('list');
+
+  function formatDate(iso) {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  async function loadNotes() {
+    try {
+      const res = await fetch(API_URL);
+      const json = await res.json();
+      if (!json.success) throw new Error(json.error || 'โหลดข้อมูลไม่สำเร็จ');
+
+      if (!json.data.length) {
+        listEl.innerHTML = '<p id="empty">ยังไม่มีข้อความ เป็นคนแรกที่ฝากข้อความสิ</p>';
+        return;
+      }
+
+      listEl.innerHTML = json.data.map(function (item) {
+        return '<div class="entry">' +
+          '<div class="entry-meta"><span class="name">' + escapeHtml(item.name) + '</span> · ' + formatDate(item.timestamp) + '</div>' +
+          '<div class="entry-message">' + escapeHtml(item.message) + '</div>' +
+          '</div>';
+      }).join('');
+    } catch (err) {
+      listEl.innerHTML = '<p id="empty">โหลดข้อความไม่สำเร็จ: ' + escapeHtml(err.message) + '</p>';
+    }
+  }
 
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
-
-    const id = document.getElementById('id').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
     const name = document.getElementById('name').value.trim();
-    const surname = document.getElementById('surname').value.trim();
-    const lastname = document.getElementById('lastname').value.trim();
-    const department = document.getElementById('department').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-
-    if (password !== confirmPassword) {
-      statusEl.textContent = 'Password และยืนยัน Password ไม่ตรงกัน';
-      statusEl.className = 'error';
-      return;
-    }
+    const message = document.getElementById('message').value.trim();
+    if (!name || !message) return;
 
     submitBtn.disabled = true;
-    statusEl.textContent = 'กำลังสมัครสมาชิก...';
+    statusEl.textContent = 'กำลังบันทึก...';
     statusEl.className = '';
 
     try {
+      // ใช้ text/plain เพื่อเลี่ยง CORS preflight ที่ Apps Script ไม่รองรับ
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'register',
-          id: id, password: password,
-          name: name, surname: surname, lastname: lastname,
-          department: department, phone: phone
-        })
+        body: JSON.stringify({ action: 'addNote', name: name, message: message })
       });
       const json = await res.json();
-      if (!json.success) throw new Error(json.error || 'สมัครสมาชิกไม่สำเร็จ');
+      if (!json.success) throw new Error(json.error || 'บันทึกไม่สำเร็จ');
 
-      statusEl.textContent = 'สมัครสมาชิกสำเร็จ กำลังไปหน้าเข้าสู่ระบบ...';
+      statusEl.textContent = 'บันทึกเรียบร้อย';
       statusEl.className = 'ok';
-      setTimeout(function () {
-        window.location.href = 'login.html';
-      }, 1200);
+      form.reset();
+      loadNotes();
     } catch (err) {
-      statusEl.textContent = err.message;
+      statusEl.textContent = 'เกิดข้อผิดพลาด: ' + err.message;
       statusEl.className = 'error';
+    } finally {
       submitBtn.disabled = false;
     }
   });
+
+  loadNotes();
 </script>
 </body>
 </html>
