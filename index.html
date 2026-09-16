@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>สมุดข้อความ</title>
+<title>เช็คลิสต์</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -105,68 +105,85 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 18px;
-    padding: 24px;
+    padding: 8px 20px;
     box-shadow: 0 1px 2px rgba(16,24,40,0.04);
-    margin-bottom: 28px;
-  }
-  .card-title {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 18px;
+    margin-bottom: 20px;
   }
 
-  label {
-    display: block;
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 7px;
+  .item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
   }
-  .field { margin-bottom: 16px; }
-  input, textarea {
+  .item-row:last-child { border-bottom: none; }
+  .item-name {
+    font-size: 15px;
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .segmented {
+    display: flex;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 3px;
+    flex-shrink: 0;
+  }
+  .segmented input { display: none; }
+  .segmented label {
+    font-size: 13.5px;
+    font-weight: 700;
+    padding: 7px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: background .15s, color .15s;
+    user-select: none;
+  }
+  .segmented input:checked + label.has-label {
+    color: #fff;
+  }
+  .segmented .opt-yes input:checked + label { background: var(--success); color: #fff; }
+  .segmented .opt-no input:checked + label { background: var(--danger); color: #fff; }
+
+  button.submit-btn {
     width: 100%;
     font-family: inherit;
     font-size: 15px;
-    color: var(--ink);
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    border-radius: 11px;
-    padding: 11px 14px;
-    outline: none;
-    transition: border-color .15s, box-shadow .15s, background .15s;
-    resize: vertical;
-  }
-  textarea { min-height: 84px; }
-  input:focus, textarea:focus {
-    border-color: var(--accent);
-    background: var(--surface);
-    box-shadow: 0 0 0 4px var(--accent-soft);
-  }
-
-  button {
-    font-family: inherit;
-    font-size: 14.5px;
     font-weight: 700;
     color: #fff;
     background: var(--accent);
     border: none;
-    padding: 11px 22px;
-    border-radius: 10px;
+    padding: 13px 26px;
+    border-radius: 11px;
     cursor: pointer;
     transition: background .15s, transform .1s;
   }
-  button:hover { background: var(--accent-dark); }
-  button:active { transform: scale(0.99); }
-  button:disabled { opacity: 0.55; cursor: default; }
+  button.submit-btn:hover { background: var(--accent-dark); }
+  button.submit-btn:active { transform: scale(0.99); }
+  button.submit-btn:disabled { opacity: 0.55; cursor: default; }
 
   #status {
     font-size: 13.5px;
     margin-top: 12px;
     min-height: 18px;
     font-weight: 500;
+    text-align: center;
   }
   #status.error { color: var(--danger); }
   #status.ok { color: var(--success); }
+
+  #empty {
+    color: var(--muted);
+    font-size: 14.5px;
+    text-align: center;
+    padding: 24px 0;
+  }
 </style>
 </head>
 <body>
@@ -175,11 +192,11 @@
     <div class="brand">
       <div class="brand-mark">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 5.5C4 4.67 4.67 4 5.5 4h9L20 8.5V18.5c0 .83-.67 1.5-1.5 1.5h-13C4.67 20 4 19.33 4 18.5v-13Z" stroke="white" stroke-width="1.6" stroke-linejoin="round"/>
-          <path d="M8 10.5h8M8 14h5" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M9 12.5l2 2 4-4.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="4" y="4" width="16" height="16" rx="4" stroke="white" stroke-width="1.6"/>
         </svg>
       </div>
-      <span class="brand-name">สมุดข้อความ</span>
+      <span class="brand-name">เช็คลิสต์</span>
     </div>
     <div class="user-area">
       <span class="user-name" id="userLabel"></span>
@@ -189,24 +206,15 @@
 </header>
 
 <main>
-  <h1>ฝากข้อความ</h1>
-  <p class="sub">ข้อความทั้งหมดถูกเก็บใน Google Sheet</p>
+  <h1>รายการเช็คลิสต์</h1>
+  <p class="sub">เลือกสถานะ "มี" หรือ "ไม่มี" ให้ครบทุกรายการ แล้วกดบันทึก</p>
 
-  <div class="card">
-    <p class="card-title">เขียนข้อความใหม่</p>
-    <form id="noteForm">
-      <div class="field">
-        <label for="name">ชื่อ</label>
-        <input id="name" type="text" required maxlength="60">
-      </div>
-      <div class="field">
-        <label for="message">ข้อความ</label>
-        <textarea id="message" required maxlength="500"></textarea>
-      </div>
-      <button type="submit" id="submitBtn">บันทึก</button>
-      <div id="status"></div>
-    </form>
+  <div class="card" id="itemsCard">
+    <p id="empty">กำลังโหลดรายการ...</p>
   </div>
+
+  <button class="submit-btn" id="submitBtn" style="display:none;">บันทึกข้อมูล</button>
+  <div id="status"></div>
 </main>
 
 <script>
@@ -216,7 +224,7 @@
   // (เกิดจาก cold start ของ Apps Script บางครั้ง ไม่ใช่ error จริง)
   async function fetchJson(url, options, attempt) {
     if (attempt === undefined) attempt = 0;
-    const delays = [0, 1000, 2500]; // รอมากขึ้นเรื่อยๆ ในแต่ละรอบที่ลองใหม่ (รวม 3 ครั้ง)
+    const delays = [0, 1000, 2500];
     if (delays[attempt] > 0) {
       await new Promise(function (r) { setTimeout(r, delays[attempt]); });
     }
@@ -232,7 +240,6 @@
     }
   }
 
-
   const userRaw = sessionStorage.getItem('user');
   if (!userRaw) {
     window.location.href = 'login.html';
@@ -247,9 +254,9 @@
     window.location.href = 'login.html';
   });
 
-  const form = document.getElementById('noteForm');
-  const statusEl = document.getElementById('status');
+  const itemsCard = document.getElementById('itemsCard');
   const submitBtn = document.getElementById('submitBtn');
+  const statusEl = document.getElementById('status');
 
   function escapeHtml(str) {
     const div = document.createElement('div');
@@ -257,11 +264,55 @@
     return div.innerHTML;
   }
 
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const name = document.getElementById('name').value.trim();
-    const message = document.getElementById('message').value.trim();
-    if (!name || !message) return;
+  async function loadItems() {
+    try {
+      const json = await fetchJson(API_URL + '?action=getChecklistItems');
+      if (!json.success) throw new Error(json.error || 'โหลดรายการไม่สำเร็จ');
+
+      if (!json.items.length) {
+        itemsCard.innerHTML = '<p id="empty">ไม่มีรายการให้เช็คในขณะนี้</p>';
+        return;
+      }
+
+      itemsCard.innerHTML = json.items.map(function (item, idx) {
+        const groupName = 'item_' + idx;
+        return '<div class="item-row" data-item="' + escapeHtml(item) + '">' +
+          '<span class="item-name">' + escapeHtml(item) + '</span>' +
+          '<div class="segmented">' +
+            '<span class="opt-yes"><input type="radio" name="' + groupName + '" id="' + groupName + '_yes" value="มี" required>' +
+              '<label for="' + groupName + '_yes">มี</label></span>' +
+            '<span class="opt-no"><input type="radio" name="' + groupName + '" id="' + groupName + '_no" value="ไม่มี">' +
+              '<label for="' + groupName + '_no">ไม่มี</label></span>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      submitBtn.style.display = 'block';
+    } catch (err) {
+      itemsCard.innerHTML = '<p id="empty">โหลดรายการไม่สำเร็จ: ' + escapeHtml(err.message) + '</p>';
+    }
+  }
+
+  submitBtn.addEventListener('click', async function () {
+    const rows = itemsCard.querySelectorAll('.item-row');
+    const items = [];
+    let allAnswered = true;
+
+    rows.forEach(function (row) {
+      const itemName = row.getAttribute('data-item');
+      const checked = row.querySelector('input[type="radio"]:checked');
+      if (!checked) {
+        allAnswered = false;
+        return;
+      }
+      items.push({ name: itemName, status: checked.value });
+    });
+
+    if (!allAnswered) {
+      statusEl.textContent = 'กรุณาเลือกสถานะให้ครบทุกรายการ';
+      statusEl.className = 'error';
+      return;
+    }
 
     submitBtn.disabled = true;
     statusEl.textContent = 'กำลังบันทึก...';
@@ -271,13 +322,19 @@
       const json = await fetchJson(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'addNote', name: name, message: message })
+        body: JSON.stringify({
+          action: 'submitChecklist',
+          userId: currentUser.id,
+          name: currentUser.name,
+          surname: currentUser.surname,
+          department: currentUser.department,
+          items: items
+        })
       });
       if (!json.success) throw new Error(json.error || 'บันทึกไม่สำเร็จ');
 
       statusEl.textContent = 'บันทึกเรียบร้อย';
       statusEl.className = 'ok';
-      form.reset();
     } catch (err) {
       statusEl.textContent = 'เกิดข้อผิดพลาด: ' + err.message;
       statusEl.className = 'error';
@@ -285,6 +342,8 @@
       submitBtn.disabled = false;
     }
   });
+
+  loadItems();
 </script>
 </body>
 </html>
